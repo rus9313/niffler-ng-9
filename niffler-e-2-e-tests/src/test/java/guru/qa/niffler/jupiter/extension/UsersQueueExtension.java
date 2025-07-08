@@ -54,8 +54,7 @@ public class UsersQueueExtension implements
     public void beforeTestExecution(ExtensionContext context) {
         Map<UserType, StaticUser> userMap = new HashMap<>();
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
-                .map(p -> p.getAnnotation(UserType.class))
+                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class) && p.getType().isAssignableFrom(StaticUser.class))                .map(p -> p.getAnnotation(UserType.class))
                 .forEach(ut -> {
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
@@ -80,15 +79,17 @@ public class UsersQueueExtension implements
 
     @Override
     public void afterTestExecution(ExtensionContext context) {
-        HashMap<UserType, StaticUser> user = context.getStore(NAMESPACE).get(context.getUniqueId(), HashMap.class);
-        user.entrySet().forEach(k -> {
-            switch (k.getKey().empty()) {
-                case EMPTY -> EMPTY_USERS.add(k.getValue());
-                case WITH_FRIEND -> WITH_FRIEND_USERS.add(k.getValue());
-                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(k.getValue());
-                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(k.getValue());
-            }
-        });
+        Map<UserType, StaticUser> user = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
+        if(user != null) {
+            user.entrySet().forEach(k -> {
+                switch (k.getKey().empty()) {
+                    case EMPTY -> EMPTY_USERS.add(k.getValue());
+                    case WITH_FRIEND -> WITH_FRIEND_USERS.add(k.getValue());
+                    case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(k.getValue());
+                    case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(k.getValue());
+                }
+            });
+        }
     }
 
     @Override
