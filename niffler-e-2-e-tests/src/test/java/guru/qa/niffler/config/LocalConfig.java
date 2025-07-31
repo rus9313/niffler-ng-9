@@ -1,3 +1,4 @@
+
 package guru.qa.niffler.config;
 
 enum LocalConfig implements Config {
@@ -14,6 +15,11 @@ enum LocalConfig implements Config {
   }
 
   @Override
+  public String authJdbcUrl() {
+    return "jdbc:postgresql://127.0.0.1:5432/niffler-auth";
+  }
+
+  @Override
   public String gatewayUrl() {
     return "http://127.0.0.1:8090/";
   }
@@ -24,8 +30,23 @@ enum LocalConfig implements Config {
   }
 
   @Override
+  public String userdataJdbcUrl() {
+    return "jdbc:postgresql://127.0.0.1:5432/niffler-userdata";
+  }
+
+  @Override
   public String spendUrl() {
     return "http://127.0.0.1:8093/";
+  }
+
+  @Override
+  public String spendJdbcUrl() {
+    return "jdbc:postgresql://127.0.0.1:5432/niffler-spend";
+  }
+
+  @Override
+  public String currencyJdbcUrl() {
+    return "jdbc:postgresql://127.0.0.1:5432/niffler-currency";
   }
 
   @Override
