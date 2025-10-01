@@ -1,9 +1,11 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.category.CategoryApiClient;
+import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.CategoryDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -14,6 +16,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
     private final CategoryApiClient categoryApiClient = new CategoryApiClient();
+    private final CategoryDbClient categoryDbClient = new CategoryDbClient();
     private String categoryName = randomCategoryName();
 
     @Override
@@ -28,16 +31,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                                 user.username(),
                                 anno.archived()
                         );
-                        CategoryJson created = categoryApiClient.createCategory(category);
-                        if (anno.archived()) {
-                            CategoryJson archivedCategory = new CategoryJson(
-                                    created.id(),
-                                    created.name(),
-                                    created.username(),
-                                    true
-                            );
-                            created = categoryApiClient.updateCategory(archivedCategory);
-                        }
+                        CategoryJson created = categoryDbClient.createCategory(category);
                         context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                     }
                 });
@@ -52,7 +46,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                     created.name(),
                     created.username(),
                     true);
-            categoryApiClient.updateCategory(categoryArchivedJson);
+            categoryDbClient.deleteCategory(CategoryEntity.fromJson(categoryArchivedJson));
         }
     }
 
