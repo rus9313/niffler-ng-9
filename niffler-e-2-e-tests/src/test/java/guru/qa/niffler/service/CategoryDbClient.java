@@ -1,32 +1,48 @@
 package guru.qa.niffler.service;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.dao.impl.UserDataUserJdbc;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.model.CategoryJson;
 
 import java.util.List;
 import java.util.Optional;
 
+import static guru.qa.niffler.data.Databases.transaction;
+
 public class CategoryDbClient {
-    private final CategoryDao categoryDao = new CategoryDaoJdbc();
+    private static final Config CFG = Config.getInstance();
 
     public CategoryJson createCategory(CategoryJson categoryJson) {
-        CategoryEntity category = CategoryEntity.fromJson(categoryJson);
-        return CategoryJson.fromEntity(categoryDao.create(category));
+        return transaction(connection -> {
+                    CategoryEntity category = CategoryEntity.fromJson(categoryJson);
+                    return CategoryJson.fromEntity(new CategoryDaoJdbc(connection).create(category));
+                }, CFG.spendJdbcUrl()
+        );
     }
 
     public Optional<CategoryJson> findCategoryByUserNameAndCategoryName(String userName, String categoryName) {
-        Optional<CategoryEntity> se = categoryDao.findCategoryByUserNameAndCategoryName(userName, categoryName);
-        return se.map(CategoryJson::fromEntity);
+        return transaction(connection -> {
+                    Optional<CategoryEntity> se = new CategoryDaoJdbc(connection).findCategoryByUserNameAndCategoryName(userName, categoryName);
+                    return se.map(CategoryJson::fromEntity);
+                }, CFG.spendJdbcUrl()
+        );
     }
 
     public List<CategoryEntity> findAllByUserName(String userName) {
-        return categoryDao.findAllByUserName(userName);
+        return transaction(connection -> {
+                    return new CategoryDaoJdbc(connection).findAllByUserName(userName);
+                }, CFG.spendJdbcUrl()
+        );
     }
 
     public void deleteCategory(CategoryEntity category) {
-        categoryDao.deleteCategory(category);
+        transaction(connection -> {
+                    new CategoryDaoJdbc(connection).deleteCategory(category);
+                }, CFG.spendJdbcUrl()
+        );
     }
 
 }
