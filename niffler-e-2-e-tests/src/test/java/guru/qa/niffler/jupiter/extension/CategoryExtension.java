@@ -11,6 +11,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
+import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
@@ -31,7 +32,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                                 user.username(),
                                 anno.archived()
                         );
-                        CategoryJson created = categoryDbClient.createCategory(category);
+                        CategoryJson created = categoryDbClient.createCategory(category, TRANSACTION_READ_COMMITTED);
                         context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                     }
                 });
@@ -46,7 +47,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                     created.name(),
                     created.username(),
                     true);
-            categoryDbClient.deleteCategory(CategoryEntity.fromJson(categoryArchivedJson));
+            categoryDbClient.deleteCategory(CategoryEntity.fromJson(categoryArchivedJson), TRANSACTION_READ_COMMITTED);
         }
     }
 
