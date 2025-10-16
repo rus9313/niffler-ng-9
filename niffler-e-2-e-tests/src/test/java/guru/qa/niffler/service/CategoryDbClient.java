@@ -13,37 +13,33 @@ import static guru.qa.niffler.data.Databases.transaction;
 public class CategoryDbClient {
     private static final Config CFG = Config.getInstance();
 
-    public CategoryJson createCategory(CategoryJson categoryJson, int isolationLevel) {
+    public CategoryJson createCategory(CategoryJson categoryJson) {
         return transaction(connection -> {
                     CategoryEntity category = CategoryEntity.fromJson(categoryJson);
                     return CategoryJson.fromEntity(new CategoryDaoJdbc(connection).create(category));
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 
-    public Optional<CategoryJson> findCategoryByUserNameAndCategoryName(String userName, String categoryName, int isolationLevel) {
+    public Optional<CategoryJson> findCategoryByUserNameAndCategoryName(String userName, String categoryName) {
         return transaction(connection -> {
                     Optional<CategoryEntity> se = new CategoryDaoJdbc(connection).findCategoryByUserNameAndCategoryName(userName, categoryName);
                     return se.map(CategoryJson::fromEntity);
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 
-    public List<CategoryEntity> findAllByUserName(String userName, int isolationLevel) {
+    public List<CategoryEntity> findAllByUserName(String userName) {
         return transaction(connection -> {
                     return new CategoryDaoJdbc(connection).findAllByUserName(userName);
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 
-    public void deleteCategory(CategoryEntity category, int isolationLevel) {
+    public void deleteCategory(CategoryEntity category) {
         transaction(connection -> {
                     new CategoryDaoJdbc(connection).deleteCategory(category);
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 

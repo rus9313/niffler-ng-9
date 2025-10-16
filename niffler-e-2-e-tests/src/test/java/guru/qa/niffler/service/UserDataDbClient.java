@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.Databases.transaction;
-import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class UserDataDbClient {
     private static final Config CFG = Config.getInstance();
@@ -16,30 +15,27 @@ public class UserDataDbClient {
     public UserEntity createUser(UserEntity user) {
         return transaction(connection -> {
                     return new UserDataUserJdbc(connection).createUser(user);
-                }, CFG.userdataJdbcUrl(),
-                TRANSACTION_READ_COMMITTED
+                }, CFG.userdataJdbcUrl()
         );
     }
 
     public Optional<UserEntity> findById(String id) {
         return transaction(connection -> {
                     return new UserDataUserJdbc(connection).findById(UUID.fromString(id));
-                }, CFG.userdataJdbcUrl(),
-                TRANSACTION_READ_COMMITTED
+                }, CFG.userdataJdbcUrl()
         );
     }
 
     public Optional<UserEntity> findByUserName(String name) {
         return transaction(connection -> {
                     return new UserDataUserJdbc(connection).findByUserName(name);
-                }, CFG.userdataJdbcUrl(),
-                TRANSACTION_READ_COMMITTED
+                }, CFG.userdataJdbcUrl()
         );
     }
 
     public void delete(UserEntity entity) {
         transaction(connection -> {
             new UserDataUserJdbc(connection).delete(entity);
-        }, CFG.spendJdbcUrl(), TRANSACTION_READ_COMMITTED);
+        }, CFG.spendJdbcUrl());
     }
 }

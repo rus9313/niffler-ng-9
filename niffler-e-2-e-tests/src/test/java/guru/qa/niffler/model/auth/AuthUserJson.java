@@ -19,9 +19,9 @@ public record AuthUserJson(
                 entity.getUsername(),
                 entity.getPassword(),
                 entity.isEnabled(),
-                entity.isAccount_non_expired(),
-                entity.isAccount_non_locked(),
-                entity.isCredentials_non_expired()
+                entity.isAccountNonExpired(),
+                entity.isAccountNonLocked(),
+                entity.isCredentialsNonExpired()
         );
     }
 }

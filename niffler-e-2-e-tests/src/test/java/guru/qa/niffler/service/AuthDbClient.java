@@ -13,34 +13,32 @@ import static guru.qa.niffler.data.Databases.transaction;
 public class AuthDbClient {
     private static final Config CFG = Config.getInstance();
 
-    public AuthUserJson createUser(AuthUserEntity user, int isolationLevel) {
+    public AuthUserJson createUser(AuthUserEntity user) {
         return transaction(connection -> {
                     AuthUserDaoJdbc daoJdbc = new AuthUserDaoJdbc(connection);
                     return AuthUserJson.fromEntity(daoJdbc.createUser(user));
                 },
-                CFG.authJdbcUrl(),
-                isolationLevel
-        );
-    }
-    public Optional<AuthUserEntity> findUserById(UUID id, int isolationLevel) {
-        return transaction(connection -> {
-            return new AuthUserDaoJdbc(connection).findById(id);
-                }, CFG.authJdbcUrl(),
-                isolationLevel
+                CFG.authJdbcUrl()
         );
     }
 
-    public Optional<AuthUserEntity> findAllByUserName(String userName,  int isolationLevel) {
+    public Optional<AuthUserEntity> findUserById(UUID id) {
         return transaction(connection -> {
-            return new AuthUserDaoJdbc(connection).findByUserName(userName);
-        }, CFG.authJdbcUrl(),
-                isolationLevel
+                    return new AuthUserDaoJdbc(connection).findById(id);
+                }, CFG.authJdbcUrl()
         );
     }
 
-    public void deleteUser(AuthUserEntity user, int isolationLevel) {
+    public Optional<AuthUserEntity> findAllByUserName(String userName, int isolationLevel) {
+        return transaction(connection -> {
+                    return new AuthUserDaoJdbc(connection).findByUserName(userName);
+                }, CFG.authJdbcUrl()
+        );
+    }
+
+    public void deleteUser(AuthUserEntity user) {
         transaction(connection -> {
             new AuthUserDaoJdbc(connection).delete(user);
-        }, CFG.authJdbcUrl(),isolationLevel);
+        }, CFG.authJdbcUrl());
     }
 }

@@ -19,7 +19,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public AuthAuthorityEntity createUser(AuthAuthorityEntity userEntity) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO \"user\" (user_id, authority) " +
+                "INSERT INTO authority (user_id, authority) " +
                         "VALUES ( ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {

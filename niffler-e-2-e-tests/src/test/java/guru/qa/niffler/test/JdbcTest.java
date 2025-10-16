@@ -28,7 +28,7 @@ public class JdbcTest {
                 CurrencyValues.RUB,
                 1000.0,
                 "spend-name-tx111",
-                "duck"), TRANSACTION_READ_COMMITTED);
+                "duck"));
         System.out.println(spend);
     }
 }

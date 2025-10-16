@@ -17,7 +17,7 @@ public class SpendDbClient {
 
     private static final Config CFG = Config.getInstance();
 
-    public SpendJson createSpend(SpendJson spend, int isolationLevel) {
+    public SpendJson createSpend(SpendJson spend) {
         return transaction(connection -> {
                     SpendEntity spendEntity = SpendEntity.fromJson(spend);
                     if (spendEntity.getCategory().getId() == null) {
@@ -29,34 +29,30 @@ public class SpendDbClient {
                             new SpendDaoJdbc(connection).create(spendEntity)
                     );
                 },
-                CFG.spendJdbcUrl(),
-                isolationLevel
+                CFG.spendJdbcUrl()
         );
     }
 
-    public Optional<SpendJson> findSpendById(UUID id, int isolationLevel) {
+    public Optional<SpendJson> findSpendById(UUID id) {
         return transaction(connection -> {
                     Optional<SpendEntity> se = new SpendDaoJdbc(connection).findSpendById(id);
                     return se.map(SpendJson::fromEntity);
 
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 
-    public List<SpendEntity> findAllByUserName(String userName, int isolationLevel) {
+    public List<SpendEntity> findAllByUserName(String userName) {
         return transaction(connection -> {
                     return new SpendDaoJdbc(connection).findAllByUserName(userName);
-                }, CFG.spendJdbcUrl(),
-                isolationLevel
+                }, CFG.spendJdbcUrl()
         );
     }
 
-    public void deleteSpend(SpendJson spend, int isolationLevel) {
+    public void deleteSpend(SpendJson spend) {
         transaction(connection -> {
-                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
-                    new SpendDaoJdbc(connection).deleteSpend(spendEntity);
-                }, CFG.spendJdbcUrl(),
-                isolationLevel);
+            SpendEntity spendEntity = SpendEntity.fromJson(spend);
+            new SpendDaoJdbc(connection).deleteSpend(spendEntity);
+        }, CFG.spendJdbcUrl());
     }
 }

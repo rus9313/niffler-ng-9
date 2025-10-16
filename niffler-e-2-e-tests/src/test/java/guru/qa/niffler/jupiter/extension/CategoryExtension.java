@@ -32,7 +32,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                                 user.username(),
                                 anno.archived()
                         );
-                        CategoryJson created = categoryDbClient.createCategory(category, TRANSACTION_READ_COMMITTED);
+                        CategoryJson created = categoryDbClient.createCategory(category);
                         context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                     }
                 });
@@ -47,7 +47,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                     created.name(),
                     created.username(),
                     true);
-            categoryDbClient.deleteCategory(CategoryEntity.fromJson(categoryArchivedJson), TRANSACTION_READ_COMMITTED);
+            categoryDbClient.deleteCategory(CategoryEntity.fromJson(categoryArchivedJson));
         }
     }
 

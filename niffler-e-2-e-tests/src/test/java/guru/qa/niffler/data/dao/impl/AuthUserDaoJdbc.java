@@ -27,9 +27,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             ps.setString(1, userEntity.getUsername());
             ps.setString(2, pe.encode(userEntity.getPassword()));
             ps.setBoolean(3, userEntity.isEnabled());
-            ps.setBoolean(4, userEntity.isAccount_non_expired());
-            ps.setBoolean(5, userEntity.isAccount_non_locked());
-            ps.setBoolean(6, userEntity.isCredentials_non_expired());
+            ps.setBoolean(4, userEntity.isAccountNonExpired());
+            ps.setBoolean(5, userEntity.isAccountNonLocked());
+            ps.setBoolean(6, userEntity.isCredentialsNonExpired());
 
             ps.executeUpdate();
 
@@ -62,9 +62,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                     userEntity.setUsername(rs.getString("username"));
                     userEntity.setPassword(rs.getString("password"));
                     userEntity.setEnabled(rs.getBoolean("enabled"));
-                    userEntity.setAccount_non_expired(rs.getBoolean("account_non_expired"));
-                    userEntity.setAccount_non_locked(rs.getBoolean("account_non_locked"));
-                    userEntity.setCredentials_non_expired(rs.getBoolean("credentials_non_expired"));
+                    userEntity.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    userEntity.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    userEntity.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     return Optional.of(userEntity);
                 } else {
                     return Optional.empty();
@@ -89,9 +89,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                     userEntity.setUsername(rs.getString("username"));
                     userEntity.setPassword(rs.getString("password"));
                     userEntity.setEnabled(rs.getBoolean("enabled"));
-                    userEntity.setAccount_non_expired(rs.getBoolean("account_non_expired"));
-                    userEntity.setAccount_non_locked(rs.getBoolean("account_non_locked"));
-                    userEntity.setCredentials_non_expired(rs.getBoolean("credentials_non_expired"));
+                    userEntity.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    userEntity.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    userEntity.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     return Optional.of(userEntity);
                 } else {
                     return Optional.empty();

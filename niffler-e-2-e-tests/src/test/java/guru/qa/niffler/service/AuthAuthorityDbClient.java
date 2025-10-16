@@ -13,22 +13,20 @@ import static guru.qa.niffler.data.Databases.transaction;
 public class AuthAuthorityDbClient {
     private static final Config CFG = Config.getInstance();
 
-    public AuthorityJson createUser(AuthAuthorityEntity user, int isolationLevel) {
+    public AuthorityJson createUser(AuthAuthorityEntity user) {
         return transaction(connection -> {
                     AuthAuthorityDaoJdbc daoJdbc = new AuthAuthorityDaoJdbc(connection);
                     return AuthorityJson.fromEntity(daoJdbc.createUser(user));
                 },
-                CFG.authJdbcUrl(),
-                isolationLevel
+                CFG.authJdbcUrl()
 
         );
     }
 
-    public Optional<AuthAuthorityEntity> findById(UUID id, int isolationLevel) {
+    public Optional<AuthAuthorityEntity> findById(UUID id) {
         return transaction(connection -> {
                     return new AuthAuthorityDaoJdbc(connection).findById(id);
-                }, CFG.authJdbcUrl(),
-                isolationLevel
+                }, CFG.authJdbcUrl()
         );
     }
 
@@ -38,9 +36,9 @@ public class AuthAuthorityDbClient {
         }, CFG.authJdbcUrl(), isolationLevel);
     }
 
-    public void deleteUser(AuthAuthorityEntity user, int isolationLevel) {
+    public void deleteUser(AuthAuthorityEntity user) {
         transaction(connection -> {
             new AuthAuthorityDaoJdbc(connection).delete(user);
-        }, CFG.authJdbcUrl(), isolationLevel);
+        }, CFG.authJdbcUrl());
     }
 }
