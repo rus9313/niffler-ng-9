@@ -1,21 +1,17 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.spend.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendDbClient;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Date;
 
 import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
+import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
@@ -27,28 +23,28 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(user -> {
-                    if(user.spendings().length != 0) {
-                        Spending anno = user.spendings()[0];
-                        SpendJson spendJson = new SpendJson(
-                                null,
-                                new Date(),
-                                new CategoryJson(
+                            if (user.spendings().length != 0) {
+                                Spending anno = user.spendings()[0];
+                                SpendJson spendJson = new SpendJson(
                                         null,
-                                        anno.category(),
-                                        user.username(),
-                                        false),
-                                anno.currency(),
-                                anno.amount(),
-                                anno.description(),
-                                user.username()
-                        );
-                        context.getStore(NAMESPACE).put(
-                                context.getUniqueId(),
-                                spendDbClient.createSpend(spendJson)
-                        );
-                    }
-                }
-        );
+                                        new Date(),
+                                        new CategoryJson(
+                                                null,
+                                                anno.category(),
+                                                user.username(),
+                                                false),
+                                        anno.currency(),
+                                        anno.amount(),
+                                        anno.description(),
+                                        user.username()
+                                );
+                                context.getStore(NAMESPACE).put(
+                                        context.getUniqueId(),
+                                        spendDbClient.createSpend(spendJson)
+                                );
+                            }
+                        }
+                );
     }
 
     @Override

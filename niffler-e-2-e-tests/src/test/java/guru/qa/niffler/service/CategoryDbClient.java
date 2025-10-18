@@ -1,9 +1,7 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.UserDataUserJdbc;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.model.CategoryJson;
 

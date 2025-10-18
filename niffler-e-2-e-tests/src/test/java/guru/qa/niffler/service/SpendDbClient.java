@@ -44,8 +44,9 @@ public class SpendDbClient {
 
     public List<SpendEntity> findAllByUserName(String userName) {
         return transaction(connection -> {
-            return new SpendDaoJdbc(connection).findAllByUserName(userName);
-            }, CFG.spendJdbcUrl());
+                    return new SpendDaoJdbc(connection).findAllByUserName(userName);
+                }, CFG.spendJdbcUrl()
+        );
     }
 
     public void deleteSpend(SpendJson spend) {
