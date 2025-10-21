@@ -3,7 +3,9 @@ package guru.qa.niffler.test;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.UserDataDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -30,5 +32,23 @@ public class JdbcTest {
                 "spend-name-tx111",
                 "duck"));
         System.out.println(spend);
+    }
+
+    @Test
+    void springJdbcTest() {
+        UserDataDbClient usersDbClient = new UserDataDbClient();
+        UserJson user = usersDbClient.createUserSpringJdbc(
+                new UserJson(
+                        null,
+                        "valentin-5",
+                        CurrencyValues.RUB,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                )
+        );
+        System.out.println(user);
     }
 }

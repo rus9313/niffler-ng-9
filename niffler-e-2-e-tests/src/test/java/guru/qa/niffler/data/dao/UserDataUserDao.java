@@ -10,8 +10,4 @@ public interface UserDataUserDao {
     UserEntity createUser(UserEntity userEntity);
 
     Optional<UserEntity> findById(UUID id);
-
-    Optional<UserEntity> findByUserName(String userName);
-
-    void delete(UserEntity entity);
 }

@@ -74,43 +74,4 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public Optional<AuthUserEntity> findByUserName(String userName) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM \"user\" WHERE username = ?"
-        )) {
-            ps.setString(1, userName);
-            ps.execute();
-            AuthUserEntity userEntity = new AuthUserEntity();
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    userEntity.setId(rs.getObject("id", UUID.class));
-                    userEntity.setUsername(rs.getString("username"));
-                    userEntity.setPassword(rs.getString("password"));
-                    userEntity.setEnabled(rs.getBoolean("enabled"));
-                    userEntity.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-                    userEntity.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-                    userEntity.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-                    return Optional.of(userEntity);
-                } else {
-                    return Optional.empty();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void delete(AuthUserEntity entity) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM \"user\" WHERE id = ?"
-        )) {
-            ps.setObject(1, entity.getId());
-            ps.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

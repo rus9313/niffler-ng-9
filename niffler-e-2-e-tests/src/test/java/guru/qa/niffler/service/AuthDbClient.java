@@ -28,17 +28,4 @@ public class AuthDbClient {
                 }, CFG.authJdbcUrl()
         );
     }
-
-    public Optional<AuthUserEntity> findAllByUserName(String userName, int isolationLevel) {
-        return transaction(connection -> {
-                    return new AuthUserDaoJdbc(connection).findByUserName(userName);
-                }, CFG.authJdbcUrl()
-        );
-    }
-
-    public void deleteUser(AuthUserEntity user) {
-        transaction(connection -> {
-            new AuthUserDaoJdbc(connection).delete(user);
-        }, CFG.authJdbcUrl());
-    }
 }
