@@ -2,6 +2,7 @@ package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.SpendDao;
+import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -127,7 +128,7 @@ public class SpendDaoJdbc implements SpendDao {
         )) {
             ps.execute();
             List<SpendEntity> spendEntityList = new ArrayList<>();
-            CategoryDao categoryDao = new CategoryDaoJdbc(connection);
+            CategoryEntity category = new CategoryEntity();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
                     SpendEntity spendEntity = new SpendEntity();
@@ -137,8 +138,8 @@ public class SpendDaoJdbc implements SpendDao {
                     spendEntity.setSpendDate(rs.getDate("spend_date"));
                     spendEntity.setAmount(rs.getDouble("amount"));
                     spendEntity.setDescription(rs.getString("description"));
-                    UUID uuid = rs.getObject("category_id", UUID.class);
-                    spendEntity.setCategory(categoryDao.findCategoryById(uuid).get());
+                    category.setId(rs.getObject("category_id", UUID.class));
+                    spendEntity.setCategory(category);
                     spendEntityList.add(spendEntity);
                 }
                 return spendEntityList;
