@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.category.CategoryApiClient;
-import guru.qa.niffler.data.entity.category.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -11,7 +11,6 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
-import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
