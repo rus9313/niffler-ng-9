@@ -11,7 +11,9 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.auth.Authority;
@@ -29,6 +31,7 @@ public class UserDataDbClient {
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
     private final UserDataUserDao udUserDao = new UserdataUserDaoSpringJdbc();
     private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
+    private final UserdataUserRepository userRepository = new UserdataUserRepositoryJdbc();
 
     private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
@@ -86,14 +89,14 @@ public class UserDataDbClient {
                     );
                     authUserRepository.create(authUser);
                     return UserJson.fromEntity(
-                            udUserDao.createUser(UserEntity.fromJson(user)));
+                            userRepository.create(UserEntity.fromJson(user)));
                 }
         );
     }
 
     public Optional<UserEntity> findById(String id) {
         return xaTransactionTemplate.execute(() -> {
-                    return udUserDao.findById(UUID.fromString(id));
+                    return userRepository.findById(UUID.fromString(id));
                 }
         );
     }

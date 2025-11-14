@@ -1,0 +1,46 @@
+package guru.qa.niffler.data.mapper;
+
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
+import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.auth.Authority;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<List<UserEntity>> {
+    public static final UserdataUserEntityResultSetExtractor instance = new UserdataUserEntityResultSetExtractor();
+
+    private UserdataUserEntityResultSetExtractor() {
+    }
+    @Override
+    public List<UserEntity> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        Map<UUID, UserEntity> userMap = new ConcurrentHashMap<>();
+        while (rs.next()) {
+            UserEntity user = userMap.getOrDefault(rs.getObject("id", UUID.class),
+                    UserdataUserEntityRowMapper.instance.mapRow(rs, 1));
+
+            FriendshipEntity friendship = new FriendshipEntity();
+            friendship.setRequester(new UserEntity(rs.getObject("requester_id", UUID.class)));
+            friendship.setAddressee(new UserEntity(rs.getObject("addressee_id", UUID.class)));
+            friendship.setStatus(Optional.ofNullable(rs.getString("status"))
+                    .map(FriendshipStatus::valueOf)
+                    .orElse(null));
+            friendship.setCreatedDate(rs.getDate("created_date"));
+
+            if (Objects.equals(friendship.getRequester().getId(), user.getId())) {
+                user.getFriendshipRequests().add(friendship);
+            } else {
+                user.getFriendshipAddressees().add(friendship);
+            }
+            userMap.put(user.getId(), user);
+        }
+        return new ArrayList<>(userMap.values());
+    }
+}
