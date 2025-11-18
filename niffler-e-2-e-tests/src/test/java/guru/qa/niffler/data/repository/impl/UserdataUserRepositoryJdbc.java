@@ -1,12 +1,10 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.model.CurrencyValues;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -141,17 +139,17 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?, ?)"
         )) {
-
+            Date date = new Date(System.currentTimeMillis());
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
-            ps.setDate(4, new Date(System.currentTimeMillis()));
+            ps.setDate(4, date);
             ps.executeUpdate();
 
             ps.setObject(1, addressee.getId());
             ps.setObject(2, requester.getId());
             ps.setString(3, FriendshipStatus.ACCEPTED.name());
-            ps.setDate(4, new Date(System.currentTimeMillis()));
+            ps.setDate(4, date);
             ps.executeUpdate();
 
         } catch (SQLException e) {

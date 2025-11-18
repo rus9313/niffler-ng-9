@@ -27,18 +27,24 @@ public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<
                     UserdataUserEntityRowMapper.instance.mapRow(rs, 1));
 
             FriendshipEntity friendship = new FriendshipEntity();
-            friendship.setRequester(new UserEntity(rs.getObject("requester_id", UUID.class)));
-            friendship.setAddressee(new UserEntity(rs.getObject("addressee_id", UUID.class)));
+            if (rs.getObject("requester_id", UUID.class).equals(user.getId())) {
+                friendship.setRequester(user);
+                UserEntity u = new UserEntity();
+                u.setId(rs.getObject("addressee_id", UUID.class));
+                friendship.setAddressee(u);
+                user.getFriendshipRequests().add(friendship);
+            }
+            if (rs.getObject("addressee_id", UUID.class).equals(user.getId())) {
+                UserEntity u = new UserEntity();
+                u.setId(rs.getObject("requester_id", UUID.class));
+                friendship.setRequester(u);
+                friendship.setAddressee(user);
+                user.getFriendshipAddressees().add(friendship);
+            }
             friendship.setStatus(Optional.ofNullable(rs.getString("status"))
                     .map(FriendshipStatus::valueOf)
                     .orElse(null));
             friendship.setCreatedDate(rs.getDate("created_date"));
-
-            if (Objects.equals(friendship.getRequester().getId(), user.getId())) {
-                user.getFriendshipRequests().add(friendship);
-            } else {
-                user.getFriendshipAddressees().add(friendship);
-            }
             userMap.put(user.getId(), user);
         }
         return new ArrayList<>(userMap.values());

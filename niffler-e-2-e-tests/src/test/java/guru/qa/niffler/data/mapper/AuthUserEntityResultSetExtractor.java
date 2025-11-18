@@ -29,7 +29,7 @@ public class AuthUserEntityResultSetExtractor implements ResultSetExtractor<List
                     AuthUserEntityRowMapper.instance.mapRow(rs, 1));
             AuthorityEntity authority = new AuthorityEntity();
             authority.setUser(user);
-            authority.setId(rs.getObject("authority_id", UUID.class));
+            authority.setId(rs.getObject("id", UUID.class));
             authority.setAuthority(Authority.valueOf(rs.getString("authority")));
             user.getAuthorities().add(authority);
             userMap.put(user.getId(), user);
