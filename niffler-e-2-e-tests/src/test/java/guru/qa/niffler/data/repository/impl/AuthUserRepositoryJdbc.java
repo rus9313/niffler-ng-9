@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthAuthorityRowMapper;
 import guru.qa.niffler.data.mapper.AuthUserEntityResultSetExtractor;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
@@ -64,18 +65,18 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 """
-             SELECT a.id as authority_id,
-                    authority,
-                    user_id as id,
-                    username,
-                    u.password,
-                    u.enabled,
-                    u.account_non_expired,
-                    u.account_non_locked,
-                    u.credentials_non_expired
-            FROM "user" u join public.authority a on u.id = a.user_id
-            WHERE u.id = ?
-            """
+                         SELECT a.id as authority_id,
+                                authority,
+                                user_id as id,
+                                username,
+                                u.password,
+                                u.enabled,
+                                u.account_non_expired,
+                                u.account_non_locked,
+                                u.credentials_non_expired
+                        FROM "user" u join public.authority a on u.id = a.user_id
+                        WHERE u.id = ?
+                    """
         )) {
             ps.setObject(1, id);
 
@@ -110,12 +111,44 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"user\" u join public.authority a on u.id = a.user_id WHERE u.username = ?"
+                """
+                         SELECT a.id as authority_id,
+                                authority,
+                                user_id as id,
+                                username,
+                                u.password,
+                                u.enabled,
+                                u.account_non_expired,
+                                u.account_non_locked,
+                                u.credentials_non_expired
+                        FROM "user" u join public.authority a on u.id = a.user_id
+                        WHERE u.username = ?
+                     """
         )) {
-            ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                return Optional.ofNullable(Objects.requireNonNull(AuthUserEntityResultSetExtractor.instance
-                        .extractData(rs)).getFirst());
+            ps.setObject(1, username);
+
+            ps.execute();
+
+            try (ResultSet rs = ps.getResultSet()) {
+                AuthUserEntity user = null;
+                List<AuthorityEntity> authorityEntities = new ArrayList<>();
+                while (rs.next()) {
+                    if (user == null) {
+                        user = AuthUserEntityRowMapper.instance.mapRow(rs, 1);
+                    }
+
+                    AuthorityEntity ae = new AuthorityEntity();
+                    ae.setUser(user);
+                    ae.setId(rs.getObject("authority_id", UUID.class));
+                    ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+                    authorityEntities.add(ae);
+                }
+                if (user == null) {
+                    return Optional.empty();
+                } else {
+                    user.setAuthorities(authorityEntities);
+                    return Optional.of(user);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -125,7 +158,18 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     @Override
     public List<AuthUserEntity> findAll() {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"user\" u join public.authority a on u.id = a.user_id"
+                """
+                         SELECT a.id as authority_id,
+                                authority,
+                                user_id as id,
+                                username,
+                                u.password,
+                                u.enabled,
+                                u.account_non_expired,
+                                u.account_non_locked,
+                                u.credentials_non_expired
+                        FROM "user" u join public.authority a on u.id = a.user_id
+                     """
         )) {
             try (ResultSet rs = ps.executeQuery()) {
                 return AuthUserEntityResultSetExtractor.instance.extractData(rs);

@@ -68,7 +68,19 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
         return Optional.ofNullable(
                 Objects.requireNonNull(jdbcTemplate.query(
-                        "SELECT * FROM \"user\" u join public.authority a on u.id = a.user_id WHERE u.username = ?",
+                        """
+                                 SELECT a.id as authority_id,
+                                        authority,
+                                        user_id as id,
+                                        username,
+                                        u.password,
+                                        u.enabled,
+                                        u.account_non_expired,
+                                        u.account_non_locked,
+                                        u.credentials_non_expired
+                                FROM "user" u join public.authority a on u.id = a.user_id
+                                WHERE u.username = ?
+                                """,
                         AuthUserEntityResultSetExtractor.instance,
                         username
                 )).getFirst()
@@ -80,7 +92,19 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
         return Optional.ofNullable(
                 Objects.requireNonNull(jdbcTemplate.query(
-                        "SELECT * FROM \"user\" u join public.authority a on u.id = a.user_id WHERE u.id = ?",
+                        """
+                                     SELECT a.id as authority_id,
+                                            authority,
+                                            user_id as id,
+                                            username,
+                                            u.password,
+                                            u.enabled,
+                                            u.account_non_expired,
+                                            u.account_non_locked,
+                                            u.credentials_non_expired
+                                    FROM "user" u join public.authority a on u.id = a.user_id
+                                    WHERE u.id = ?
+                                """,
                         AuthUserEntityResultSetExtractor.instance,
                         id
                 )).getFirst()
@@ -91,7 +115,18 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     public List<AuthUserEntity> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
         return jdbcTemplate.query(
-                "SELECT * FROM \"user\" u join public.authority a on u.id = a.user_id",
+                """
+                         SELECT a.id as authority_id,
+                                authority,
+                                user_id as id,
+                                username,
+                                u.password,
+                                u.enabled,
+                                u.account_non_expired,
+                                u.account_non_locked,
+                                u.credentials_non_expired
+                        FROM "user" u join public.authority a on u.id = a.user_id
+                     """,
                 AuthUserEntityResultSetExtractor.instance
         );
     }
