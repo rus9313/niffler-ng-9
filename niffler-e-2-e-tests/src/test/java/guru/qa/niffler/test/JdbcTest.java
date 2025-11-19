@@ -1,5 +1,8 @@
 package guru.qa.niffler.test;
 
+import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -9,6 +12,7 @@ import guru.qa.niffler.service.UserDataDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.UUID;
 
 import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
@@ -40,7 +44,7 @@ public class JdbcTest {
         UserJson user = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        "valentin11",
+                        "valentin12",
                         CurrencyValues.RUB,
                         null,
                         null,
@@ -50,5 +54,11 @@ public class JdbcTest {
                 )
         );
         System.out.println(user);
+    }
+    @Test
+    void repositoryTest() {
+        AuthUserRepository repositoryJdbc = new AuthUserRepositorySpringJdbc();
+
+        System.out.println(repositoryJdbc.findById(UUID.fromString("f7de1a26-bf14-11f0-a328-562efc19339b")).get().getUsername());
     }
 }
