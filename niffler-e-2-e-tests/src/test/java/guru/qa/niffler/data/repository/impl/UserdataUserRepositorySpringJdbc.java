@@ -46,6 +46,25 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        jdbcTemplate.update(
+                """
+                    UPDATE "user"  SET username = ?,
+                                    currency = ?,
+                                    firstname = ?,
+                                    surname = ?,
+                                    photo = ?,
+                                    photo_small = ?,
+                                    full_name = ?
+                    WHERE id = ?
+                    """, user.getUsername(), user.getCurrency(), user.getFirstname(),
+                user.getSurname(), user.getPhoto(), user.getPhotoSmall(), user.getFullname()
+        );
+        return user;
+    }
+
+    @Override
     public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         return Optional.ofNullable(
@@ -70,7 +89,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void remove(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         jdbcTemplate.update("DELETE FROM \"user\" WHERE id = ?", user.getId());
         jdbcTemplate.update("DELETE FROM friendship WHERE requester_id = ? OR addressee_id = ?",
@@ -78,27 +97,13 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public List<UserEntity> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-        return jdbcTemplate.query(
-                "SELECT * FROM \"user\" u left join friendship f ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')",
-                UserdataUserEntityResultSetExtractor.instance
-        );
-    }
-
-    @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         jdbcTemplate.update(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?, ?, ?, ?)",
                 requester.getId(), addressee.getId(),
                 FriendshipStatus.PENDING.name(), new Date(System.currentTimeMillis())
         );
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-        addIncomeInvitation(requester, addressee);
     }
 
     @Override

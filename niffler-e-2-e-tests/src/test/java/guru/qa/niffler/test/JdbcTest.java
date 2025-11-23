@@ -1,20 +1,17 @@
 package guru.qa.niffler.test;
 
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.SpendDbClient;
-import guru.qa.niffler.service.UserDataDbClient;
+import guru.qa.niffler.service.impl.SpendDbClient;
+import guru.qa.niffler.service.impl.UserDataDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.UUID;
-
-import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 
 public class JdbcTest {

@@ -2,6 +2,7 @@ package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -46,7 +47,18 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
-        return List.of();
+    public AuthUserEntity update(AuthUserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.merge(user);
+        return user;
+    }
+
+    @Override
+    public void remove(AuthUserEntity user) {
+        AuthUserEntity ae = entityManager.find(AuthUserEntity.class, user.getId());
+        if(ae != null) {
+            entityManager.joinTransaction();
+            entityManager.remove(ae);
+        }
     }
 }

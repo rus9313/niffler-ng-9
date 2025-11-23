@@ -53,6 +53,35 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                """
+                    UPDATE "user" SET username = ?,
+                                    currency = ?,
+                                    firstname = ?,
+                                    surname = ?,
+                                    photo = ?,
+                                    photo_small = ?,
+                                    full_name = ?
+                    WHERE id = ?
+                    """
+        )) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getCurrency().name());
+            ps.setString(3, user.getFirstname());
+            ps.setString(4, user.getSurname());
+            ps.setBytes(5, user.getPhoto());
+            ps.setBytes(6, user.getPhotoSmall());
+            ps.setString(7, user.getFullname());
+            ps.setObject(8, user.getId());
+            ps.executeUpdate();
+            return user;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<UserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\" u left join friendship f ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING') WHERE u.id = ?"
@@ -83,7 +112,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void remove(UserEntity user) {
         try (PreparedStatement userPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?");
              PreparedStatement friendshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -99,21 +128,9 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         }
     }
 
-    @Override
-    public List<UserEntity> findAll() {
-        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"user\" u left join friendship f ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')"
-        )) {
-            try (ResultSet rs = ps.executeQuery()) {
-                return UserdataUserEntityResultSetExtractor.instance.extractData(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date) " +
                         "VALUES ( ?, ?, ?, ?)")) {
@@ -127,11 +144,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
             throw new RuntimeException(e);
         }
 
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-        addIncomeInvitation(requester, addressee);
     }
 
     @Override

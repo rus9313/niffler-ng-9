@@ -4,14 +4,13 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.impl.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Date;
 
 import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
-import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
