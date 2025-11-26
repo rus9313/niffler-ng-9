@@ -1,4 +1,4 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
@@ -9,12 +9,13 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.SpendClient;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpendDbClient {
+public class SpendDbClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
 
@@ -25,6 +26,7 @@ public class SpendDbClient {
             CFG.spendJdbcUrl()
     );
 
+    @Override
     public SpendJson createSpend(SpendJson spend) {
         return jdbcTxTemplate.execute(() -> {
                     SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -38,6 +40,7 @@ public class SpendDbClient {
         );
     }
 
+    @Override
     public Optional<SpendJson> findSpendById(UUID id) {
         return jdbcTxTemplate.execute(() -> {
                     Optional<SpendEntity> se = new SpendDaoJdbc().findSpendById(id);
@@ -46,6 +49,7 @@ public class SpendDbClient {
         );
     }
 
+    @Override
     public List<SpendEntity> findAllByUserName(String userName) {
         return jdbcTxTemplate.execute(() -> {
                     return new SpendDaoJdbc().findAllByUserName(userName);
@@ -53,7 +57,8 @@ public class SpendDbClient {
         );
     }
 
-    public void deleteSpend(SpendJson spend) {
+    @Override
+    public void removeSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
         new SpendDaoJdbc().deleteSpend(spendEntity);
     }
