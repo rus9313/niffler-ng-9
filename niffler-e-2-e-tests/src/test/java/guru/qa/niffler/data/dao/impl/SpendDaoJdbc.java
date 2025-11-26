@@ -110,7 +110,7 @@ public class SpendDaoJdbc implements SpendDao {
     @Override
     public List<SpendEntity> findAllByUserNameAndDescription(String userName, String description) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM spend WHERE userName = ? and description = ?"
+                "SELECT * FROM spend WHERE username = ? and description = ?"
         )) {
             ps.setString(1, userName);
             ps.setString(2, description);
