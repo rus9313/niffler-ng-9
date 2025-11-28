@@ -59,7 +59,7 @@ public class UserDataDbClient implements UsersClient {
                             AuthUserEntity authUser = authUserEntity(username, "12345");
                             authUserRepository.create(authUser);
                             UserEntity adressee = userRepository.create(userEntity(username));
-                            userRepository.sendInvitation(adressee, targetEntity);
+                            userRepository.sendInvitation(targetEntity, adressee);
                             result.add(UserJson.fromEntity(
                                     adressee,
                                     FriendshipStatus.INVITE_RECEIVED
@@ -79,14 +79,13 @@ public class UserDataDbClient implements UsersClient {
             UserEntity targetEntity = userRepository.findById(
                     targetUser.id()
             ).orElseThrow();
-
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
                             String username = randomUsername();
                             AuthUserEntity authUser = authUserEntity(username, "12345");
                             authUserRepository.create(authUser);
                             UserEntity adressee = userRepository.create(userEntity(username));
-                            userRepository.sendInvitation(targetEntity, adressee);
+                            userRepository.sendInvitation(adressee, targetEntity);
                             result.add(UserJson.fromEntity(
                                     adressee,
                                     FriendshipStatus.INVITE_RECEIVED

@@ -5,25 +5,31 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.*;
 
 public class MainPage {
-  private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
+  private final ElementsCollection tableRows = $$("tbody tr");
   private final SelenideElement statistics = $x("//h2[text()='Statistics']");
   private final SelenideElement historyOfSpendings = $x("//h2[text()='History of Spendings']");
   private final SelenideElement profileBtn = $("button div.MuiAvatar-root");
   private final SelenideElement profileMenuItem = $("a[href='/profile']");
   private final SelenideElement friendsItem = $("a[href='/people/friends']");
   private final SelenideElement allPeopleItem = $("a[href='/people/all']");
+  private final SelenideElement search = $("input[placeholder='Search']");
 
-  public EditSpendingPage editSpending(String spendingDescription) {
-    tableRows.find(text(spendingDescription)).$$("td").get(5).click();
+  public EditSpendingPage editSpending(String... spendingDescriptions) {
+    for(String description: spendingDescriptions) {
+      search(description);
+      tableRows.find(text(description)).$$("td").get(5).click();
+    }
     return new EditSpendingPage();
   }
 
-  public void checkThatTableContainsSpending(String spendingDescription) {
-    tableRows.find(text(spendingDescription)).should(visible);
+  public void checkThatTableContainsSpending(String... spendingDescriptions) {
+    for(String description: spendingDescriptions) {
+      search(description);
+      tableRows.find(text(description)).should(visible);
+    }
   }
 
   public void checkFieldsAtPage() {
@@ -47,6 +53,9 @@ public class MainPage {
     allPeopleItem.click();
     return new FriendsPage();
   }
-
-
+  public void search(String name) {
+    search.shouldBe(visible).clear();
+    search.sendKeys(name);
+    search.pressEnter();
+  }
 }
