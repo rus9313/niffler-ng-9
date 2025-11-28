@@ -1,18 +1,24 @@
-package guru.qa.niffler.api.spend;
+package guru.qa.niffler.service.impl;
 
+import guru.qa.niffler.api.category.CategoryApi;
+import guru.qa.niffler.api.spend.SpendApi;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.SpendClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SpendApiClient {
+public class SpendApiClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
 
@@ -22,7 +28,9 @@ public class SpendApiClient {
             .build();
 
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
+    private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
+    @Override
     public SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -36,7 +44,8 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public SpendJson editSpend(SpendJson spend) {
+    @Override
+    public SpendJson update(SpendJson spend) {
         final Response<SpendJson> response;
         try {
             response = spendApi
@@ -47,6 +56,45 @@ public class SpendApiClient {
         }
         assertEquals(200, response.code());
         return response.body();
+    }
+
+    @Override
+    public Optional<SpendJson> findSpendById(UUID id) {
+        throw new UnsupportedOperationException("Operation not supported in API");
+    }
+
+    @Override
+    public List<SpendJson> findAllByUserName(String userName) {
+        throw new UnsupportedOperationException("Operation not supported in API");
+    }
+
+    @Override
+    public void removeSpend(SpendJson spend) {
+        try {
+            spendApi.deleteSpends(spend.username(), List.of(spend.id().toString()))
+                    .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    @Override
+    public CategoryJson createCategory(CategoryJson category) {
+        final Response<CategoryJson> response;
+        try {
+            response = categoryApi
+                    .createCategory(category)
+                    .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertEquals(200, response.code());
+        return response.body();
+    }
+
+    @Override
+    public void removeCategory(CategoryJson category) {
+        throw new UnsupportedOperationException("Operation not supported in API");
     }
 
     public SpendJson getSpend(String id, String userName) {

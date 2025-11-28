@@ -41,18 +41,26 @@ public class FriendsWebTest {
     }
 
     @Test
-    void incomeInvitationBePresentInFriendsTableTest(@UserType(empty = UserType.Type.WITH_INCOME_REQUEST) StaticUser user) {
+    @User(
+            incomeInvitations = 1
+    )
+    void incomeInvitationBePresentInFriendsTableTest(UserJson user) {
+        final UserJson friendRq = user.testData().incomeInvitations().getFirst();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.password())
+                .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .userHaveFriendRequest(user.income());
+                .userHaveFriendRequest(friendRq.username());
     }
 
     @Test
-    void outcomeInvitationBePresentInFriendsTableTest(@UserType(empty = UserType.Type.WITH_OUTCOME_REQUEST) StaticUser user) {
+    @User(
+            outcomeInvitations = 1
+    )
+    void outcomeInvitationBePresentInFriendsTableTest(UserJson user) {
+        final UserJson outcome = user.testData().outcomeInvitations().getFirst();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(user.username(), user.password())
+                .login(user.username(), user.testData().password())
                 .openAllPeoplePage()
-                .userHaveOutcomeInvitation(user.outcome());
+                .userHaveOutcomeInvitation(outcome.username());
     }
 }
