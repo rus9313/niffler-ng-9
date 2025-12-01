@@ -8,6 +8,7 @@ import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
@@ -41,6 +42,20 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
+    public SpendJson update(SpendJson spend) {
+        return jdbcTxTemplate.execute(() -> {
+                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
+                    if (spendEntity.getCategory().getId() == null) {
+                        CategoryEntity categoryEntity = categoryDao
+                                .create(spendEntity.getCategory());
+                        spendEntity.setCategory(categoryEntity);
+                    }
+                    return SpendJson.fromEntity(spendDao.update(spendEntity));
+                }
+        );
+    }
+
+    @Override
     public Optional<SpendJson> findSpendById(UUID id) {
         return jdbcTxTemplate.execute(() -> {
                     Optional<SpendEntity> se = new SpendDaoJdbc().findSpendById(id);
@@ -50,9 +65,12 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
-    public List<SpendEntity> findAllByUserName(String userName) {
+    public List<SpendJson> findAllByUserName(String userName) {
         return jdbcTxTemplate.execute(() -> {
-                    return new SpendDaoJdbc().findAllByUserName(userName);
+                    List<SpendEntity> entityList = spendDao.findAllByUserName(userName);
+                    return entityList.stream()
+                            .map(SpendJson::fromEntity)
+                            .toList();
                 }
         );
     }
@@ -60,6 +78,20 @@ public class SpendDbClient implements SpendClient {
     @Override
     public void removeSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
-        new SpendDaoJdbc().deleteSpend(spendEntity);
+        spendDao.deleteSpend(spendEntity);
+    }
+
+    @Override
+    public CategoryJson createCategory(CategoryJson category) {
+        return jdbcTxTemplate.execute(() -> {
+                    CategoryEntity ce = CategoryEntity.fromJson(category);
+                    return CategoryJson.fromEntity(categoryDao.create(ce));
+                }
+        );
+    }
+
+    @Override
+    public void removeCategory(CategoryJson category) {
+        categoryDao.deleteCategory(CategoryEntity.fromJson(category));
     }
 }
