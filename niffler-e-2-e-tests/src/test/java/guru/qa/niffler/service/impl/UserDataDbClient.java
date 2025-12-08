@@ -17,12 +17,16 @@ import guru.qa.niffler.service.UsersClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
+import static java.util.Objects.requireNonNull;
 
+@ParametersAreNonnullByDefault
 public class UserDataDbClient implements UsersClient {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -35,17 +39,19 @@ public class UserDataDbClient implements UsersClient {
     );
 
     @Override
+    @Nonnull
     public UserJson createUser(String username, String password) {
-        return xaTransactionTemplate.execute(() -> {
+        return requireNonNull(xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUser = authUserEntity(username, password);
                     authUserRepository.create(authUser);
                     return UserJson.fromEntity(
                             userRepository.create(userEntity(username)), null);
                 }
-        );
+        ));
     }
 
     @Override
+    @Nonnull
     public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
@@ -73,6 +79,7 @@ public class UserDataDbClient implements UsersClient {
     }
 
     @Override
+    @Nonnull
     public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
@@ -99,6 +106,7 @@ public class UserDataDbClient implements UsersClient {
     }
 
     @Override
+    @Nonnull
     public List<UserJson> createFriends(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {

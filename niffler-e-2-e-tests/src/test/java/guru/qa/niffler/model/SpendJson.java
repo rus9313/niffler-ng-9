@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Date;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public record SpendJson(
     @JsonProperty("id")
     UUID id,
@@ -22,6 +25,8 @@ public record SpendJson(
     String description,
     @JsonProperty("username")
     String username) {
+
+    @Nonnull
     public static SpendJson fromEntity(SpendEntity entity) {
         final CategoryEntity category = entity.getCategory();
         final String username = entity.getUsername();

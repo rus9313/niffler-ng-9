@@ -3,11 +3,14 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ParametersAreNonnullByDefault
 public class FriendsPage {
     private final SelenideElement textMessage = $x("//p[text()='There are no users yet']");
     private final ElementsCollection rowsFriends = $$x("//tbody[@id='friends']//tr");

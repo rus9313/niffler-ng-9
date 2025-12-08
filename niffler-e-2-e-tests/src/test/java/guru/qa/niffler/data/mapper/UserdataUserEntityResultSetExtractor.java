@@ -1,24 +1,27 @@
 package guru.qa.niffler.data.mapper;
 
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.auth.Authority;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserEntityResultSetExtractor implements ResultSetExtractor<List<UserEntity>> {
     public static final UserdataUserEntityResultSetExtractor instance = new UserdataUserEntityResultSetExtractor();
 
     private UserdataUserEntityResultSetExtractor() {
     }
+
+    @Nullable
     @Override
     public List<UserEntity> extractData(ResultSet rs) throws SQLException, DataAccessException {
         Map<UUID, UserEntity> userMap = new ConcurrentHashMap<>();

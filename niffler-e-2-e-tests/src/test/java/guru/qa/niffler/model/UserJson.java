@@ -3,7 +3,10 @@ package guru.qa.niffler.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import lombok.NonNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,7 +23,8 @@ public record UserJson(
         @JsonIgnore
         TestData testData) {
 
-    public static UserJson fromEntity(UserEntity entity, FriendshipStatus friendshipStatus) {
+    @Nonnull
+    public static UserJson fromEntity(@Nonnull UserEntity entity, @Nullable FriendshipStatus friendshipStatus) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),
@@ -35,7 +39,8 @@ public record UserJson(
         );
     }
 
-    public UserJson addTestData(TestData testData) {
+    @NonNull
+    public UserJson addTestData(@Nonnull TestData testData) {
         return new UserJson(
                 id,
                 username,

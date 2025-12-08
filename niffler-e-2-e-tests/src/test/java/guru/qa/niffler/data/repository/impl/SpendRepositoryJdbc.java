@@ -8,44 +8,54 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryJdbc implements SpendRepository {
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
     private final SpendDao spendDao = new SpendDaoJdbc();
 
+    @Nonnull
     @Override
     public SpendEntity create(SpendEntity spend) {
         return spendDao.create(spend);
     }
 
+    @Nonnull
     @Override
     public SpendEntity update(SpendEntity spend) {
         return spendDao.update(spend);
     }
 
+    @Nonnull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         return categoryDao.create(category);
     }
 
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         return categoryDao.findCategoryById(id);
     }
 
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryByUserNameAndCategoryName(String userName, String categoryName) {
         return categoryDao.findCategoryByUserNameAndCategoryName(userName, categoryName);
     }
 
+    @Nonnull
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         return spendDao.findSpendById(id);
     }
 
+    @Nonnull
     @Override
     public List<SpendEntity> findAllByUserNameAndDescription(String userName, String description) {
         return spendDao.findAllByUserNameAndDescription(userName, description);

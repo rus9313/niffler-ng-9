@@ -5,6 +5,8 @@ import guru.qa.niffler.data.dao.UserDataUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,12 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class UserDataUserJdbc implements UserDataUserDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     @Override
     public UserEntity createUser(UserEntity userEntity) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -49,6 +53,7 @@ public class UserDataUserJdbc implements UserDataUserDao {
         }
     }
 
+    @Nonnull
     @Override
     public Optional<UserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -75,6 +80,7 @@ public class UserDataUserJdbc implements UserDataUserDao {
         }
     }
 
+    @Nonnull
     @Override
     public List<UserEntity> findAll() {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

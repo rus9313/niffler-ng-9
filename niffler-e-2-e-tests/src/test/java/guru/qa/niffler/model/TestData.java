@@ -1,7 +1,12 @@
 package guru.qa.niffler.model;
 
+import lombok.NonNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public record TestData(
         String password,
         List<UserJson> friends,
@@ -11,6 +16,7 @@ public record TestData(
         List<SpendJson> spendings
 ) {
 
+    @Nonnull
     public TestData addCategories(List<CategoryJson> categories) {
         return new TestData(
                 this.password,
@@ -22,6 +28,7 @@ public record TestData(
         );
     }
 
+    @NonNull
     public TestData addSpendings(List<SpendJson> spendings) {
         return new TestData(
                 this.password,

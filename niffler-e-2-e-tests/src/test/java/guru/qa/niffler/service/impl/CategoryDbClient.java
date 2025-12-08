@@ -7,10 +7,13 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
-
+@ParametersAreNonnullByDefault
 public class CategoryDbClient {
     private static final Config CFG = Config.getInstance();
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
@@ -20,6 +23,7 @@ public class CategoryDbClient {
             CFG.spendJdbcUrl()
     );
 
+    @Nullable
     public CategoryJson createCategory(CategoryJson categoryJson) {
         return jdbcTxTemplate.execute(() -> {
                     CategoryEntity category = CategoryEntity.fromJson(categoryJson);

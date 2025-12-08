@@ -11,12 +11,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ParametersAreNonnullByDefault
@@ -33,6 +35,7 @@ public class SpendApiClient implements SpendClient {
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
     @Override
+    @Nonnull
     public SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -47,6 +50,7 @@ public class SpendApiClient implements SpendClient {
     }
 
     @Override
+    @Nonnull
     public SpendJson update(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -57,15 +61,17 @@ public class SpendApiClient implements SpendClient {
             throw new AssertionError(e);
         }
         assertEquals(200, response.code());
-        return response.body();
+        return requireNonNull(response.body());
     }
 
     @Override
+    @Nonnull
     public Optional<SpendJson> findSpendById(UUID id) {
         throw new UnsupportedOperationException("Operation not supported in API");
     }
 
     @Override
+    @Nonnull
     public List<SpendJson> findAllByUserName(String userName) {
         throw new UnsupportedOperationException("Operation not supported in API");
     }
@@ -81,6 +87,7 @@ public class SpendApiClient implements SpendClient {
     }
 
     @Override
+    @Nonnull
     public CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
@@ -91,7 +98,7 @@ public class SpendApiClient implements SpendClient {
             throw new AssertionError(e);
         }
         assertEquals(200, response.code());
-        return response.body();
+        return requireNonNull(response.body());
     }
 
     @Override
