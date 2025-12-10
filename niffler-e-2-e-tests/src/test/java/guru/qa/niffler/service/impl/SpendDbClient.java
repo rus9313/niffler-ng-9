@@ -11,6 +11,7 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,6 +33,7 @@ public class SpendDbClient implements SpendClient {
             CFG.spendJdbcUrl()
     );
 
+    @Step("Создаем spending в таблице spend")
     @Override
     @Nonnull
     public SpendJson createSpend(SpendJson spend) {
@@ -47,6 +49,7 @@ public class SpendDbClient implements SpendClient {
         ));
     }
 
+    @Step("Обновляем spending в таблице spend")
     @Override
     @Nonnull
     public SpendJson update(SpendJson spend) {
@@ -62,6 +65,7 @@ public class SpendDbClient implements SpendClient {
         ));
     }
 
+    @Step("Ищем spending по id в таблице spend")
     @Override
     @Nonnull
     public Optional<SpendJson> findSpendById(UUID id) {
@@ -72,6 +76,7 @@ public class SpendDbClient implements SpendClient {
         ));
     }
 
+    @Step("Ищем все spending по username в таблице spend")
     @Override
     @Nonnull
     public List<SpendJson> findAllByUserName(String userName) {
@@ -84,12 +89,14 @@ public class SpendDbClient implements SpendClient {
         ));
     }
 
+    @Step("Удаляем spending в таблице spend")
     @Override
     public void removeSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
         spendDao.deleteSpend(spendEntity);
     }
 
+    @Step("Создаем category в таблице category")
     @Override
     @Nonnull
     public CategoryJson createCategory(CategoryJson category) {
@@ -100,6 +107,7 @@ public class SpendDbClient implements SpendClient {
         ));
     }
 
+    @Step("Удаляем category из таблицы category")
     @Override
     public void removeCategory(CategoryJson category) {
         categoryDao.deleteCategory(CategoryEntity.fromJson(category));

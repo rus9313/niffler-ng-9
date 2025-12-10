@@ -14,6 +14,7 @@ import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.auth.Authority;
 import guru.qa.niffler.service.UsersClient;
+import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,6 +39,7 @@ public class UserDataDbClient implements UsersClient {
             CFG.userdataJdbcUrl()
     );
 
+    @Step("Создаем пользователя")
     @Override
     @Nonnull
     public UserJson createUser(String username, String password) {
@@ -50,6 +52,7 @@ public class UserDataDbClient implements UsersClient {
         ));
     }
 
+    @Step("Создаем входящее предложение дружить")
     @Override
     @Nonnull
     public List<UserJson> createIncomeInvitations(UserJson targetUser, int count) {
@@ -78,6 +81,7 @@ public class UserDataDbClient implements UsersClient {
         return result;
     }
 
+    @Step("Создаем исходщее предложение дружить")
     @Override
     @Nonnull
     public List<UserJson> createOutcomeInvitations(UserJson targetUser, int count) {
@@ -105,6 +109,7 @@ public class UserDataDbClient implements UsersClient {
         return result;
     }
 
+    @Step("Создаем друзей")
     @Override
     @Nonnull
     public List<UserJson> createFriends(UserJson targetUser, int count) {

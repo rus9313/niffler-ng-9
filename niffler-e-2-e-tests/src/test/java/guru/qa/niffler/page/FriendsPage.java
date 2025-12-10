@@ -2,11 +2,14 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,12 +20,15 @@ public class FriendsPage {
     private final ElementsCollection rowsAllPeople = $$x("//tbody[@id='all']//tr");
     private final ElementsCollection rowsFriendRequest = $$x("//tbody[@id='requests']//tr");
     private final SelenideElement search = $("input[placeholder='Search']");
+    private final SelenideElement thereAreNoUsersYetTitle = $("p.MuiTypography-root.MuiTypography-h6.css-1m7obeg");
 
 
+    @Step("Проверить текст \"There are no users yet\" ")
     public void checkTextMessage() {
         assertEquals("There are no users yet", textMessage.getText());
     }
 
+    @Step("Проверить, что пользователь имеет друга")
     public void userHaveFriend(String... users) {
         for (String user: users) {
             searchUser(user);
@@ -30,6 +36,7 @@ public class FriendsPage {
         }
     }
 
+    @Step("Проверить, что пользователь имеет запрос на дружбу")
     public void userHaveFriendRequest(String... users) {
         for (String user: users) {
             searchUser(user);
@@ -37,6 +44,33 @@ public class FriendsPage {
         }
     }
 
+    @Step("Проверить, что таблица друзей содержит предложение от '{0}' и принять его")
+    @Nonnull
+    public FriendsPage acceptFriendRequestFromUser(String userName) {
+        userHaveFriendRequest(userName);
+        SelenideElement friendRow = rowsFriendRequest.find(text(userName));
+        friendRow.$(byText("Accept")).click();
+        rowsFriends.find(text(userName)).shouldHave(text(userName));
+        return this;
+    }
+
+    @Step("Проверить, что таблица друзей содержит предложение от '{0}' и отклонить его")
+    @Nonnull
+    public FriendsPage declineFriendRequestFromUser(String user) {
+        SelenideElement friendRow = rowsFriendRequest.find(text(user));
+        friendRow.$(byText("Decline")).click();
+        $("div[role='dialog']").$(byText("Decline")).click();
+        checkFriendsListIsEmpty();
+        return this;
+    }
+
+    @Step("Проверить, что таблица друзей пустая")
+    public void checkFriendsListIsEmpty() {
+        thereAreNoUsersYetTitle.should(visible);
+    }
+
+
+    @Step("Проверить, что пользователь отправил запрос на дружбу")
     public void userHaveOutcomeInvitation(String... users) {
         for (String user: users) {
             searchUser(user);
@@ -44,7 +78,7 @@ public class FriendsPage {
         }
     }
 
-    public void searchUser(String name) {
+    private void searchUser(String name) {
         search.shouldBe(visible).clear();
         search.sendKeys(name);
         search.pressEnter();

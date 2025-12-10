@@ -63,4 +63,28 @@ public class FriendsWebTest {
                 .openAllPeoplePage()
                 .userHaveOutcomeInvitation(outcome.username());
     }
+
+    @Test
+    @User(
+            incomeInvitations = 1
+    )
+    void acceptingFriendRequestTest(UserJson user) {
+        final UserJson friendRq = user.testData().incomeInvitations().getFirst();
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openFriendsPage()
+                .acceptFriendRequestFromUser(friendRq.username());
+    }
+
+    @Test
+    @User(
+            incomeInvitations = 1
+    )
+    void declineFriendRequestTest(UserJson user) {
+        final UserJson friendRq = user.testData().incomeInvitations().getFirst();
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openFriendsPage()
+                .declineFriendRequestFromUser(friendRq.username());
+    }
 }

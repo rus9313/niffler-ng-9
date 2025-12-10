@@ -7,6 +7,7 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -34,6 +35,7 @@ public class SpendApiClient implements SpendClient {
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
     private final CategoryApi categoryApi = retrofit.create(CategoryApi.class);
 
+    @Step("Создаем spending")
     @Override
     @Nonnull
     public SpendJson createSpend(SpendJson spend) {
@@ -49,6 +51,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @Step("Обновляем spending")
     @Override
     @Nonnull
     public SpendJson update(SpendJson spend) {
@@ -76,6 +79,7 @@ public class SpendApiClient implements SpendClient {
         throw new UnsupportedOperationException("Operation not supported in API");
     }
 
+    @Step("Удаляем spending")
     @Override
     public void removeSpend(SpendJson spend) {
         try {
@@ -86,6 +90,7 @@ public class SpendApiClient implements SpendClient {
         }
     }
 
+    @Step("Создаем category")
     @Override
     @Nonnull
     public CategoryJson createCategory(CategoryJson category) {
