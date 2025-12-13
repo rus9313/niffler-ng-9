@@ -21,7 +21,7 @@ public class Calendar {
     @Nonnull
     public Calendar selectDateInCalendar(Date date) {
         long timestamp = date.getTime();
-        self.$("button[data-timestamp=" + timestamp + "]").should(visible).click();
+        self.$("button[data-timestamp=" + timestamp + "]").click();
         return this;
     }
 }

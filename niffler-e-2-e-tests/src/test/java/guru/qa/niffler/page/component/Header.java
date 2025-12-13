@@ -27,10 +27,6 @@ public class Header {
     private final SelenideElement menu = $("ul[role='menu']");
     private final ElementsCollection menuItems = menu.$$("li");
 
-    public Header(@Nonnull SelenideElement self) {
-        this.self = self;
-    }
-
     public Header() {
         this.self = $("#root header");
     }

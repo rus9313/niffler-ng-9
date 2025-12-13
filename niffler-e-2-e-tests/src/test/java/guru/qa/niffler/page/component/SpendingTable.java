@@ -18,8 +18,8 @@ public class SpendingTable {
     private final SelenideElement self = $("#spendings");
     private final By deleteButton = By.id("delete");
     private final By periodButton = By.id("period");
-    private final By deleteButtonAlert = By.cssSelector("span.MuiTouchRipple-root.css-w0pj6f");
-    private final By searchInput = By.cssSelector("input.MuiInputBase-input.css-mnn31");
+    private final By deleteButtonAlert = By.id("delete");
+    private final By searchInput = By.cssSelector("input[aria-label=search]");
 
     @Step("Кликаем кнопку периода и выбираем '{0}'")
     @Nonnull

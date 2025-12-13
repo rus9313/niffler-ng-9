@@ -34,7 +34,7 @@ public class LoginPage {
     return new RegisterPage();
   }
 
-  @Step("Проверяем сообщение об ошибки")
+  @Step("Проверяем сообщение об ошибке")
   public void checkMessageError() {
     error.should(visible);
   }

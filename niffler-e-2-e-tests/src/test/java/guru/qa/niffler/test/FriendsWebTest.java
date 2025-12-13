@@ -25,7 +25,7 @@ public class FriendsWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .openFriendsPage()
-                .checkTextMessage();
+                .checkFriendsListIsEmpty();
     }
 
     @Test

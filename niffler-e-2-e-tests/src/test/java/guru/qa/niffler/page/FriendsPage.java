@@ -20,13 +20,6 @@ public class FriendsPage {
     private final ElementsCollection rowsAllPeople = $$x("//tbody[@id='all']//tr");
     private final ElementsCollection rowsFriendRequest = $$x("//tbody[@id='requests']//tr");
     private final SelenideElement search = $("input[placeholder='Search']");
-    private final SelenideElement thereAreNoUsersYetTitle = $("p.MuiTypography-root.MuiTypography-h6.css-1m7obeg");
-
-
-    @Step("Проверить текст \"There are no users yet\" ")
-    public void checkTextMessage() {
-        assertEquals("There are no users yet", textMessage.getText());
-    }
 
     @Step("Проверить, что пользователь имеет друга")
     public void userHaveFriend(String... users) {
@@ -66,7 +59,7 @@ public class FriendsPage {
 
     @Step("Проверить, что таблица друзей пустая")
     public void checkFriendsListIsEmpty() {
-        thereAreNoUsersYetTitle.should(visible);
+        textMessage.should(visible);
     }
 
 

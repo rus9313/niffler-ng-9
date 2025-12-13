@@ -27,11 +27,9 @@ public class MainPage {
 
     @Step("Редактируем spending")
     @Nonnull
-    public EditSpendingPage editSpending(String... spendingDescriptions) {
-        for (String description : spendingDescriptions) {
-            search(description);
-            tableRows.find(text(description)).$$("td").get(5).click();
-        }
+    public EditSpendingPage editSpending(String spendingDescription) {
+        search(spendingDescription);
+        tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
     }
 

@@ -37,7 +37,7 @@ public class SpendingTest {
         new MainPage().checkThatTableContainsSpending(newDescription);
     }
 
-    @User()
+    @User
     @Test
     void addNewSpendingTest(UserJson user) {
         String description = RandomDataUtils.randomSentence(3);
