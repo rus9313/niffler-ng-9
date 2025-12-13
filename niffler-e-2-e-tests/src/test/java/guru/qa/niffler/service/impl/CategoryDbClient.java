@@ -6,6 +6,7 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
+import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,6 +24,7 @@ public class CategoryDbClient {
             CFG.spendJdbcUrl()
     );
 
+    @Step("Создаем новую категорию в таблице category")
     @Nullable
     public CategoryJson createCategory(CategoryJson categoryJson) {
         return jdbcTxTemplate.execute(() -> {
@@ -32,6 +34,7 @@ public class CategoryDbClient {
         );
     }
 
+    @Step("Ищем категорию в таблице category")
     public Optional<CategoryJson> findCategoryByUserNameAndCategoryName(String userName, String categoryName) {
         return jdbcTxTemplate.execute(() -> {
                     Optional<CategoryEntity> se = categoryDao.findCategoryByUserNameAndCategoryName(userName, categoryName);
@@ -40,6 +43,7 @@ public class CategoryDbClient {
         );
     }
 
+    @Step("Ищем все категории в таблице category")
     public List<CategoryEntity> findAllByUserName(String userName) {
         return jdbcTxTemplate.execute(() -> {
                     return categoryDao.findAllByUserName(userName);
@@ -47,6 +51,7 @@ public class CategoryDbClient {
         );
     }
 
+    @Step("Удаляем категорию из таблицы category")
     public void deleteCategory(CategoryEntity category) {
         categoryDao.deleteCategory(category);
     }

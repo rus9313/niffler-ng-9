@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,6 +18,7 @@ public class LoginPage {
   private final SelenideElement newAccount = $x("//*[@id=\"register-button\"]");
   private final SelenideElement error = $(".form__error");
 
+  @Step("На странице логина ввести имя '{0}' и пароль '{1}'")
   @Nonnull
   public MainPage login(String username, String password) {
     usernameInput.setValue(username);
@@ -25,12 +27,14 @@ public class LoginPage {
     return new MainPage();
   }
 
+  @Step("На странице логина кликнуть на кнопку create new account")
   @Nonnull
   public RegisterPage createNewAccount() {
     newAccount.click();
     return new RegisterPage();
   }
 
+  @Step("Проверяем сообщение об ошибке")
   public void checkMessageError() {
     error.should(visible);
   }

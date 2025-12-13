@@ -2,6 +2,8 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,15 +23,23 @@ public class MainPage {
     private final SelenideElement allPeopleItem = $("a[href='/people/all']");
     private final SelenideElement search = $("input[placeholder='Search']");
 
+    private final Header header = new Header();
+
+    @Step("Редактируем spending")
     @Nonnull
-    public EditSpendingPage editSpending(String... spendingDescriptions) {
-        for (String description : spendingDescriptions) {
-            search(description);
-            tableRows.find(text(description)).$$("td").get(5).click();
-        }
+    public EditSpendingPage editSpending(String spendingDescription) {
+        search(spendingDescription);
+        tableRows.find(text(spendingDescription)).$$("td").get(5).click();
         return new EditSpendingPage();
     }
 
+    @Step("Добавляем новый spending")
+    @Nonnull
+    public EditSpendingPage addNewSpending() {
+        return header.addSpending();
+    }
+
+    @Step("Проверяем,что страница содержит spending '{0}'")
     public void checkThatTableContainsSpending(String... spendingDescriptions) {
         for (String description : spendingDescriptions) {
             search(description);
@@ -37,11 +47,13 @@ public class MainPage {
         }
     }
 
+    @Step("Проверяем поля на странице profile")
     public void checkFieldsAtPage() {
         statistics.should(visible);
         historyOfSpendings.should(visible);
     }
 
+    @Step("Открываем страницу profile")
     @Nonnull
     public ProfilePage openProfilePage() {
         profileBtn.click();
@@ -49,6 +61,7 @@ public class MainPage {
         return new ProfilePage();
     }
 
+    @Step("Открываем страницу friends")
     @Nonnull
     public FriendsPage openFriendsPage() {
         profileBtn.click();
@@ -56,6 +69,7 @@ public class MainPage {
         return new FriendsPage();
     }
 
+    @Step("Открываем страницу All people")
     @Nonnull
     public FriendsPage openAllPeoplePage() {
         profileBtn.click();

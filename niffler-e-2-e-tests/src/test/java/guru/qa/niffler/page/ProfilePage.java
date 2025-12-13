@@ -2,13 +2,14 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -36,42 +37,51 @@ public class ProfilePage {
     private final SelenideElement popUpArchiveBtn = $(By.xpath("//button[text() = 'Archive']"));
     private final SelenideElement popUpUnArchiveBtn = $(By.xpath("//button[text() = 'Unarchive']"));
 
+    private final Header header = new Header();
+
+    @Step("Уставливаем имя '{0}' в поле name ")
     @Nonnull
     public ProfilePage setUserName(String userName) {
         nameInput.setValue(userName);
         return this;
     }
 
+    @Step("Сохраняем изменения")
     @Nonnull
     public ProfilePage saveChanges() {
         saveChangesButton.click();
         return this;
     }
 
+    @Step("Добавляем новую категорию '{0}'")
     @Nonnull
     public ProfilePage addNewCategory(String categoryName) {
         category.setValue(categoryName).pressEnter();
         return this;
     }
 
+    @Step("Проверяем, что активная категория '{0}' есть ")
     @Nonnull
     public ProfilePage checkThatActiveCategoryIsPresented(String name) {
         activeCategoryRows.find(text(name)).shouldBe(visible);
         return this;
     }
 
+    @Step("Проверяем, что архивировная  категория '{0}' есть ")
     @Nonnull
     public ProfilePage checkThatArchivedCategoryIsPresented(String name) {
         archivedCategoryRows.find(text(name)).shouldBe(visible);
         return this;
     }
 
+    @Step("Кликнуть на показать архивированые категории")
     @Nonnull
     public ProfilePage showArchivedCategories() {
         showArchivedToggle.click();
         return this;
     }
 
+    @Step("Архивировать категорию")
     @Nonnull
     public ProfilePage archiveCategory(String name) {
         activeCategoryRows
@@ -83,6 +93,7 @@ public class ProfilePage {
         return this;
     }
 
+    @Step("Разархивировать категорию")
     @Nonnull
     public ProfilePage unArchiveCategory(String name) {
         archivedCategoryRows
@@ -92,5 +103,16 @@ public class ProfilePage {
                 .click();
         popUpUnArchiveBtn.shouldBe(visible).click();
         return this;
+    }
+
+    @Step("Перейти на главную страницу кликом на Niffler")
+    @Nonnull
+    public MainPage goToMain() {
+        return header.toMainPage();
+    }
+
+    @Step("Проверить, что поле username содержит значение '{0}'")
+    public void checkProfileName(String userName) {
+        nameInput.shouldHave(value(userName));
     }
 }
