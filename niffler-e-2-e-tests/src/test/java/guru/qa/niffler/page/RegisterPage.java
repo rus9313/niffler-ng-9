@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 @ParametersAreNonnullByDefault
-public class RegisterPage {
+public class RegisterPage extends BasePage<RegisterPage>{
     private final SelenideElement usernameInput = $("input[id='username']");
     private final SelenideElement passwordInput = $("input[id='password']");
     private final SelenideElement submitButton = $("input[id='passwordSubmit']");

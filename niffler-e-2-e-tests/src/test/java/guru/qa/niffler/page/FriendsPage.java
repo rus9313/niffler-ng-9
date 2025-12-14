@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ParametersAreNonnullByDefault
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage>{
     private final SelenideElement textMessage = $x("//p[text()='There are no users yet']");
     private final ElementsCollection rowsFriends = $$x("//tbody[@id='friends']//tr");
     private final ElementsCollection rowsAllPeople = $$x("//tbody[@id='all']//tr");

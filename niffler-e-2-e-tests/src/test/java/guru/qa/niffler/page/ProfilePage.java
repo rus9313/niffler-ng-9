@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage {
+public class ProfilePage extends BasePage<ProfilePage>{
     private final SelenideElement nameInput = $("input[id='name']");
     private final SelenideElement usernameInput = $("input[id='username']");
     private final SelenideElement saveChangesButton = $("button[type=submit]");
