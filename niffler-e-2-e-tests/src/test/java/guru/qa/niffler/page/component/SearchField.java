@@ -10,17 +10,16 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class SearchField {
+public class SearchField extends BaseComponent<SearchField>{
 
     private final SelenideElement clearSearchInputBtn = $("#input-clear");
-    private final SelenideElement self;
 
     public SearchField(@Nonnull SelenideElement self) {
-        this.self = self;
+        super(self);
     }
 
     public SearchField() {
-        this.self = $("input[aria-label='search']");
+        super($("input[aria-label='search']"));
     }
 
     @Step("В строке поиска задать текст '{0}'")

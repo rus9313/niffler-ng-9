@@ -14,9 +14,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class Header {
-
-    private final SelenideElement self;
+public class Header extends BaseComponent<Header>{
     private final By profileIcon = By.cssSelector("svg[data-testid='PersonIcon']");
     private final By friendsInMenu = By.cssSelector("a[href*='/people/friends']");
     private final By allPeopleInMenu = By.cssSelector("a[href='/people/all']");
@@ -28,7 +26,7 @@ public class Header {
     private final ElementsCollection menuItems = menu.$$("li");
 
     public Header() {
-        this.self = $("#root header");
+        super($("#root header"));
     }
 
     @Step("Проверить, что в хедере отображается текст 'Niffler'")

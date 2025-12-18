@@ -61,4 +61,17 @@ public class ProfileTest {
                 .openProfilePage()
                 .checkProfileName(userName);
     }
+
+    @User
+    @Test
+    void checkAlertOnProfilePage(UserJson user) {
+        String userName = RandomDataUtils.randomName();
+
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .openProfilePage()
+                .setUserName(userName)
+                .saveChanges()
+                .checkAlert("Profile successfully updated");
+    }
 }

@@ -53,4 +53,20 @@ public class SpendingTest {
 
         new MainPage().checkThatTableContainsSpending(description);
     }
+
+    @User
+    @Test
+    void checkAlertOnMainPage(UserJson user) {
+        String description = RandomDataUtils.randomSentence(3);
+
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .addNewSpending()
+                .setNewCategoryDescription(RandomDataUtils.randomCategoryName())
+                .setNewSpendingAmount(50.0)
+                .setSpendingCurrency(CurrencyValues.USD)
+                .setNewSpendingDescription(description)
+                .save()
+                .checkAlert("New spending is successfully created");
+    }
 }

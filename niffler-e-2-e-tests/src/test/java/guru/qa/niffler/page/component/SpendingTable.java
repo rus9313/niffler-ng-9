@@ -1,6 +1,5 @@
 package guru.qa.niffler.page.component;
 
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
@@ -14,12 +13,15 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable {
-    private final SelenideElement self = $("#spendings");
+public class SpendingTable extends BaseComponent<SpendingTable>{
     private final By deleteButton = By.id("delete");
     private final By periodButton = By.id("period");
     private final By deleteButtonAlert = By.id("delete");
     private final By searchInput = By.cssSelector("input[aria-label=search]");
+
+    public SpendingTable() {
+        super($("#spendings"));
+    }
 
     @Step("Кликаем кнопку периода и выбираем '{0}'")
     @Nonnull

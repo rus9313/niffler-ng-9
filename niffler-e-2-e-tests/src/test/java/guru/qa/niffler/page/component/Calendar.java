@@ -7,14 +7,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Date;
 
-import static com.codeborne.selenide.Condition.visible;
-
 @ParametersAreNonnullByDefault
-public class Calendar {
-    private final SelenideElement self;
+public class Calendar extends BaseComponent<Calendar>{
 
     public Calendar(SelenideElement self) {
-        this.self = self;
+        super(self);
     }
 
     @Step("Выбираем дату в календаре '{0}'")
