@@ -34,25 +34,29 @@ public class UserExtension implements
                     if ("".equals(userAnno.username())) {
                         final String username = RandomDataUtils.randomUsername();
                         UserJson created = usersClient.createUser(username, DEFAULT_PASSWORD);
+                        final List<UserJson> others = usersClient.addOtherPeoples(userAnno.others());
                         final List<UserJson> incomes = usersClient.createIncomeInvitations(created, userAnno.incomeInvitations());
                         final List<UserJson> outcomes = usersClient.createOutcomeInvitations(created, userAnno.outcomeInvitations());
                         final List<UserJson> friends = usersClient.createFriends(created, userAnno.friends());
 
                         TestData testData = new TestData(
                                 DEFAULT_PASSWORD,
+                                others,
                                 friends,
                                 incomes,
-                                outcomes,
-                                new ArrayList<>(),
-                                new ArrayList<>()
+                                outcomes
                         );
-
-                        context.getStore(NAMESPACE).put(
-                                context.getUniqueId(),
-                                created.addTestData(testData)
-                        );
+                        setUser(created.addTestData(testData));
                     }
                 });
+    }
+
+    public static void setUser(UserJson testUser) {
+        final ExtensionContext context = TestMethodContextExtension.context();
+        context.getStore(NAMESPACE).put(
+                context.getUniqueId(),
+                testUser
+        );
     }
 
     @Override

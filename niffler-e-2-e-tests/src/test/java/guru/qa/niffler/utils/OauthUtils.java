@@ -19,7 +19,7 @@ public class OauthUtils {
                 .encodeToString(randomBytes);
     }
 
-    public static String generateCodeChallange(String codeVerifier) {
+    public static String generateCodeChallenge(String codeVerifier) {
         byte[] bytes;
         MessageDigest messageDigest;
         try {

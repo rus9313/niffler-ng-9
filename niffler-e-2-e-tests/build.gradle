@@ -102,6 +102,7 @@ dependencies {
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {
         exclude group: 'org.yaml'
     }
+    testImplementation "com.squareup.retrofit2:converter-scalars:${retrofitVersion}"
     testImplementation 'commons-io:commons-io:2.19.0'
     testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'

@@ -9,6 +9,7 @@ import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
+import guru.qa.niffler.jupiter.extension.UserExtension;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.UserJson;
@@ -129,6 +130,29 @@ public class UserDataDbClient implements UsersClient {
                             result.add(UserJson.fromEntity(
                                     userFriend,
                                     FriendshipStatus.FRIEND
+                            ));
+                            return null;
+                        }
+                );
+            }
+        }
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    @Step("Add {0} other people(s) for user using SQL INSERT")
+    public List<UserJson> addOtherPeoples(int count) {
+        final List<UserJson> result = new ArrayList<>();
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                xaTransactionTemplate.execute(() -> {
+                            String username = randomUsername();
+                            authUserRepository.create(authUserEntity(username, UserExtension.DEFAULT_PASSWORD));
+                            UserEntity other = userRepository.create(userEntity(username));
+                            result.add(UserJson.fromEntity(
+                                    other,
+                                    null
                             ));
                             return null;
                         }
